@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="github">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Syafiq Nazri | Platform Engineer</title>
+<meta name="description" content="Interactive terminal portfolio. Type a command to explore.">
+<meta name="theme-color" content="#0d1117">
+
+<meta property="og:title" content="Syafiq Nazri | Platform Engineer">
+<meta property="og:description" content="Interactive terminal portfolio. Type a command to explore.">
+<meta property="og:type" content="website">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1117'/><text y='70' x='16' font-size='54' font-family='monospace' fill='%233bde77'>&gt;_</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<canvas id="matrix" aria-hidden="true" hidden></canvas>
+
+<div class="stage">
+  <section class="window" id="window">
+
+    <!-- ── title bar ─────────────────────────────────── -->
+    <header class="titlebar">
+      <div class="lights" aria-hidden="true">
+        <span class="light light--red"></span>
+        <span class="light light--yellow"></span>
+        <span class="light light--green"></span>
+      </div>
+      <button class="titlebar__name" data-cmd="home" title="Back to the start screen">
+        <span id="tb-title">user@portfolio: — bash</span>
+      </button>
+      <div class="titlebar__right">
+        <button class="tb-btn" data-cmd="help" title="Show all commands">help</button>
+        <button class="tb-btn" id="matrix-btn" title="Toggle matrix rain" aria-pressed="false">matrix</button>
+      </div>
+    </header>
+
+    <!-- ── profile header ────────────────────────────── -->
+    <div class="profile">
+      <div class="avatar" id="pf-initials" aria-hidden="true">SN</div>
+      <div class="profile__info">
+        <div class="profile__name" id="pf-name">Syafiq Nazri</div>
+        <div class="profile__title" id="pf-title">Full-Stack Developer</div>
+        <div class="profile__meta">
+          <a id="pf-github" href="#" target="_blank" rel="noopener noreferrer">github.com/yourhandle</a>
+          <span class="dot-sep" aria-hidden="true">&middot;</span>
+          <span id="pf-location">Kuala Lumpur, MY</span>
+        </div>
+      </div>
+      <a class="resume-btn" id="pf-resume" href="assets/resume.pdf" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">&darr;</span> Resume
+      </a>
+    </div>
+
+    <!-- ── terminal body ─────────────────────────────── -->
+    <main class="term" id="term" tabindex="-1">
+      <!-- persistent: banner + clickable command list -->
+      <div id="masthead" class="masthead"></div>
+      <!-- swappable: exactly one command's output at a time -->
+      <div id="output" class="output" aria-live="polite"></div>
+
+      <div class="inputline" id="inputline" hidden>
+        <label class="prompt" for="cmdline">
+          <span class="p-user" id="p-user">user</span><span class="p-at">@</span><span class="p-host" id="p-host">portfolio</span><span class="p-sep">:</span><span class="p-path" id="p-path">~</span><span class="p-dollar">$</span>
+        </label>
+        <span class="input-wrap">
+          <input id="cmdline" type="text" autocomplete="off" autocorrect="off" autocapitalize="off"
+                 spellcheck="false" aria-label="Terminal command input">
+          <span class="ghost" id="ghost" aria-hidden="true"></span>
+        </span>
+      </div>
+    </main>
+
+    <!-- ── footer ────────────────────────────────────── -->
+    <footer class="winfoot">
+      &copy; <span id="ft-year">2026</span> <span id="ft-brand">Devfolio</span>.
+      Made with <span class="heart" aria-label="love">&#10084;</span> by <span id="ft-by">SN</span>
+    </footer>
+
+  </section>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/ascii.js"></script>
+<script src="assets/js/matrix.js"></script>
+<script src="assets/js/render.js"></script>
+<script src="assets/js/fs.js"></script>
+<script src="assets/js/commands.js"></script>
+<script src="assets/js/terminal.js"></script>
+</body>
+</html>
