@@ -41,6 +41,9 @@
 
     <style>
         html { scrollbar-color: #333 #0a0a0a; }
+        /* nothing here is meant to scroll sideways; this keeps a stray wide
+           child from shunting the whole layout off-centre */
+        body { overflow-x: hidden; }
         ::selection { background: #4ade80; color: #000; }
         .caret::after {
             content: '';
@@ -401,16 +404,23 @@
         const pathFor = id => (id === 'home' ? '/' : '/' + id);
         const currentId = () => location.pathname.replace(/^\/+|\/+$/g, '') || 'home';
 
+        // the browser otherwise restores its own scroll position after load,
+        // undoing the jump we make when landing on /contact
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
         function markActive(id) {
             document.querySelectorAll('.nav-link').forEach(link =>
                 link.classList.toggle('active', link.dataset.section === id));
         }
 
+        // scrollTo rather than scrollIntoView: the latter may also scroll
+        // sideways, which shunts the whole layout off-centre
         function scrollToSection(id, smooth) {
             const behavior = smooth ? 'smooth' : 'auto';
             if (id === 'home') return window.scrollTo({ top: 0, behavior });
             const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior, block: 'start' });
+            if (!el) return;
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior });
         }
 
         function setUrl(id, replace) {
@@ -438,17 +448,34 @@
             markActive(id);
         });
 
-        // landing straight on /contact: jump without animating from the top
+        /* Landing straight on /contact: jump there without animating from the
+           top. One jump is not enough — the web font and the hero's typing
+           animation both change the page height after the first frame, which
+           would leave the reader parked on the wrong section. So re-aim as
+           each of those settles. */
         (function land() {
             const id = currentId();
             if (id === 'home' || !SECTIONS.includes(id)) return;
+
             const root = document.documentElement;
             root.classList.remove('scroll-smooth');
-            requestAnimationFrame(() => {
-                scrollToSection(id, false);
-                markActive(id);
+            const aim = () => scrollToSection(id, false);
+
+            aim();
+            requestAnimationFrame(aim);
+            markActive(id);
+
+            const settle = () => {
+                aim();
                 root.classList.add('scroll-smooth');
-            });
+            };
+
+            window.addEventListener('load', () => {
+                aim();
+                // metrics shift again once the webfont swaps in
+                (document.fonts ? document.fonts.ready : Promise.resolve())
+                    .then(() => setTimeout(settle, 50));
+            }, { once: true });
         })();
 
         // keep the address bar in step as the reader scrolls
